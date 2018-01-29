@@ -83,7 +83,7 @@ ExternalProject_Add(
 
 set(XYLITOL_ALL_BOOST_LIBRARIES "")
 
-function(alc_init_boost component_name boost_libs)
+function(xylitol_init_boost component_name boost_libs)
   set(tmp "")
   foreach(lib IN LISTS boost_libs)
     if(NOT "${lib}" IN_LIST XYLITOL_ALL_BOOST_LIBRARIES)
@@ -133,8 +133,8 @@ set(CMAKE_DEBUG_POSTFIX d)
 
 # subdirectories
 # add_subdirectory(src)
-alc_init_boost(
-  ALC
+xylitol_init_boost(
+  XYLITOL
   "log;date_time;thread;chrono;atomic;program_options;filesystem;regex;iostreams;locale;system"
 )
 
