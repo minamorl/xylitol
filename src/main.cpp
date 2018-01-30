@@ -4,7 +4,7 @@ namespace qi = boost::spirit::qi;
 
 namespace xylitol
 {
-namespace core
+namespace rule
 {
 template <typename Iterator>
 struct lang : qi::grammar<Iterator>
@@ -31,7 +31,7 @@ int main()
   std::string s = "<a>xxx<abc>";
   std::string::iterator fst = s.begin();
 
-  xylitol::core::lang<std::string::iterator> l;
+  xylitol::rule::lang<std::string::iterator> l;
 
   qi::parse(fst, s.end(), l);
 }
