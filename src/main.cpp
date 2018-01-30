@@ -1,21 +1,37 @@
 #include <boost/spirit/include/qi.hpp>
 
+namespace qi = boost::spirit::qi;
+
 namespace xylitol
 {
 namespace core
 {
-void print(const char c)
+template <typename Iterator>
+struct lang : qi::grammar<Iterator>
 {
-  std::cout << c << std::endl;
-}
+  lang() : lang::base_type(document)
+  {
+    character %= (+qi::char_('a', 'z'))[&lang::print_];
+    document %= +('<' >> character >> '>' | qi::char_);
+  }
+  qi::rule<Iterator> character;
+  qi::rule<Iterator> document;
+
+private:
+  static void print_(std::vector<char> v)
+  {
+    std::cout << "Parsing: " << std::string(v.begin(), v.end()) << std::endl;
+  }
+};
 }
 }
 
 int main()
 {
-  using namespace boost::spirit::qi;
-  std::string s = R"(<a>)";
-  auto fst = s.begin();
-  parse(fst, s.end(), '>' >> char_('a')[&xylitol::core::print]);
-  return 0;
+  std::string s = "<a>xxx<abc>";
+  std::string::iterator fst = s.begin();
+
+  xylitol::core::lang<std::string::iterator> l;
+
+  qi::parse(fst, s.end(), l);
 }
