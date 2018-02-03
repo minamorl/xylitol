@@ -12,8 +12,31 @@ struct character : qi::grammar<Iterator>
 {
 };
 
-// Conditional Section (* should be modified *)
 /*
+// Mixed-contend Declaration
+const auto mixed = qi::copy(
+  "(" >> -s >> "#PCDATA" >> *(-s >> "|" >> -s >> name) >> -s >> ")*" | "(" >> -s >> "#PCDATA" >> -s >> ")"
+);
+
+// Attribute-list Declaration
+const auto attlistdecl = qi::copy("<!ATTLIST" >> s >> name >> *attdef >> -s >> ">");
+const auto attdef = qi::copy(s >> name >> s >> atttype >> s >> defaultdecl);
+
+// Attribute Types
+const auto stringtype = qi::copy(qi::string("CDATA"));
+const auto tokenizedtype = qi::copy(qi::string("ID") | "IDREF" | "IDREFS" | "ENTITY" | "ENTITIES" | "NMTOKEN" | "NMTOKENS");
+const auto atttype = qi::copy(stringtype | tokenizedtype | enumeratedtype);
+
+// Enumerated Attribute Types
+const auto notationtype = qi::copy("NOTATION" >> s >> "(" >> -s >> name >>
+                                   *(-s >> "|" >> -s >> name) >> ")");
+const auto enumeration = qi::copy("(" >> -s >> nmtoken >> *(-s >> "|" >> -s >> nmtoken) >> -s >> ")");
+const auto enumeratedtype = qi::copy(notationtype | enumeration);
+
+// Attribute Defaults
+const auto defaultdecl = qi::copy(qi::string("#REQUIRED") | qi::string("#IMPLIED") | (-("#FIXED" >> s) >> attvalue));
+
+// Conditional Section (* should be modified *)
 const auto includesect = qi::copy(
   "<![" >> -s >> "INCLUDE" >> -s >> "[" >> extsubsetdecl >> "]]"
 );
