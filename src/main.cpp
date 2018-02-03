@@ -13,7 +13,7 @@ struct character : qi::grammar<Iterator>
 };
 
 /*
-// Mixed-contend Declaration
+// Mixed-content Declaration
 const auto mixed = qi::copy(
   "(" >> -s >> "#PCDATA" >> *(-s >> "|" >> -s >> name) >> -s >> ")*" | "(" >> -s >> "#PCDATA" >> -s >> ")"
 );
