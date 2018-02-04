@@ -13,6 +13,40 @@ struct character : qi::grammar<Iterator>
 };
 
 /*
+// Language Identification
+const auto iso639code = (qi::char_('a', 'z') | qi::char_('A', 'Z')) >> (qi::char_('a', 'z') | qi::char_('A', 'Z'));
+const auto ianacode = (qi::char_('i') | qi::char_('I')) >> '-' >> +qi::char_('A', 'Z');
+const auto usercode = (qi::char_('x') | qi::char_('X')) >> '-' >> +qi::char_('A', 'Z');
+const auto subcode = +(qi::char_('a', 'z') | qi::char_('A', 'Z'));
+const auto languageid = langcode >> *("-" > subcode);
+const auto langcode = iso639code | ianacode | usercode;
+
+// Element
+const auto element = emptyelemtag | stag >> content >> etag;
+
+// Start-tag
+const auto stag = "<" >> name >> *(s >> attribute) >> -s >> ">";
+const auto attribute = name >> eq >> attvalue;
+
+// End-tag
+const auto etag = "</" >> name >> -s >> ">";
+
+// Content of Elements
+const auto content = *(element | chardata | reference | cdsect | pi | comment);
+
+// Tags for Empty Children
+const auto emptyelemtag = "<" >> name >> *(s >> attribute) >> -s >> "/>";
+
+// Element Type Declaration
+const auto elementdecl = "<!ELEMENT" >> s >> name >> s >> contentspec >> -s >> '>';
+const auto contentspec = qi::string("EMPTY") | qi::string("ANY") | mixed | children;
+
+// Element-content Models
+const auto choise = qi::copy('(' >> -s >> cp >> *(-s >> '|' >> -s >> cp) >> -s >> ')');
+const auto seq = qi::copy('(' >> -s >> cp >> *(-s >> ',' >> -s >> cp) >> -s >> ')');
+const auto children = qi::copy(choise | seq) >> -(qi::char_('?') | qi::char_('*') | qi::char_('+'));
+const auto cp = qi::copy((name | choise | seq) >> -(qi::char_('?') | qi::char_('*') | qi::char_('+')));
+
 // Mixed-content Declaration
 const auto mixed = qi::copy(
   "(" >> -s >> "#PCDATA" >> *(-s >> "|" >> -s >> name) >> -s >> ")*" | "(" >> -s >> "#PCDATA" >> -s >> ")"
