@@ -6,6 +6,11 @@ namespace xylitol
 {
 namespace rule
 {
+
+// External Subset
+const auto extsubsetdecl = qi::copy(
+  *( markupdecl | conditionalsect | pereference | s ));
+const auto extsubset = qi::copy(-extDecl >> extsubsetdecl);
 // Standalone Document Declaration
 const auto sddecl = qi::copy(s >> qi::string("standalone") >> eq 
   >> (qi::char_('\'') >> (qi::string("yes") | qi::string("no")) >> qi::char_('\'') | 
