@@ -6,11 +6,10 @@ namespace xylitol
 {
 namespace rule
 {
-
-template <typename Iterator>
-struct character : qi::grammar<Iterator>
-{
-};
+// Standalone Document Declaration
+const auto sddecl = qi::copy(s >> qi::string("standalone") >> eq 
+  >> (qi::char_('\'') >> (qi::string("yes") | qi::string("no")) >> qi::char_('\'') | 
+  qi::char_('"')) >> (qi::string("yes") | qi::string("no")) >> qi::char_('"'));
 
 /*
 // Language Identification
